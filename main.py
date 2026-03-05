@@ -71,11 +71,16 @@ def parse_file_path(url_param: str) -> Optional[str]:
     if not s:
         return None
 
-    # If it looks like a URL (e.g. http://), reject - we only open local paths
+    # Reject remote URL schemes (http, https, etc.) - allow file://, mbvr://, and Windows paths like Z:/...
+    # urlparse treats "Z:/path" as scheme="z" - single letter = Windows drive letter, not a URL scheme
     parsed = urlparse(s)
-    if parsed.scheme and parsed.scheme.lower() not in ("", "file"):
-        log(f"Rejected non-local URL scheme: {parsed.scheme}")
-        return None
+    if parsed.scheme:
+        scheme = parsed.scheme.lower()
+        remote_schemes = ("http", "https", "ftp", "ftps", "sftp", "ssh")
+        if scheme in remote_schemes:
+            log(f"Rejected remote URL scheme: {parsed.scheme}")
+            return None
+        # Single-letter scheme = Windows drive (e.g. Z:), allow it
 
     # Normalize path separators for Windows
     return s.replace("/", "\\")
