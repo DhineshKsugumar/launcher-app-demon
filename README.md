@@ -48,7 +48,7 @@ The file opens in its default application (e.g. Notepad for .txt, PDF reader for
 
 ## Running the Daemon
 
-- **`run_daemon.bat`** — Double-click to start in background (no console). Uses VBScript so the daemon stays running after the window closes. Tries `pythonw`, then `py -3`, then `python`.
+- **`run_daemon.bat`** — Double-click to start in background (no console). Uses PowerShell Start-Process so the daemon stays running after the window closes. Tries `pythonw`, then `py -3`, then `python`.
 - **`run_daemon_visible.bat`** — Runs with a visible console (for debugging). Use this if the daemon fails to start.
 
 ## Run at Windows Startup

@@ -1,7 +1,10 @@
 @echo off
 REM Launcher Daemon - runs detached in background on localhost:8765
-REM Uses VBScript so the process survives when this window closes
+REM Uses PowerShell Start-Process so the daemon survives when this window closes
 cd /d "%~dp0"
+
+set "WORK_DIR=%~dp0"
+set "WORK_DIR=%WORK_DIR:~0,-1%"
 
 set PYTHON_CMD=
 where pythonw >nul 2>&1
@@ -26,6 +29,7 @@ pause
 exit /b 1
 
 :run
-REM VBS runs the daemon truly detached (won't die when this batch exits)
-wscript //nologo "%~dp0start_daemon.vbs" "%PYTHON_CMD%"
+REM Start-Process creates an independent process that survives when batch exits
+REM Use cmd /c so the daemon runs in a detached process (not tied to wscript/batch)
+powershell -NoProfile -Command "Start-Process -FilePath 'cmd.exe' -ArgumentList '/c','%PYTHON_CMD% main.py' -WorkingDirectory '%WORK_DIR%' -WindowStyle Hidden"
 echo Launcher daemon started on http://localhost:8765
