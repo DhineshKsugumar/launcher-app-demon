@@ -48,16 +48,20 @@ The file opens in its default application (e.g. Notepad for .txt, PDF reader for
 
 ## Running the Daemon
 
-- **`run_daemon.bat`** — Double-click to start in background (no console). Tries `pythonw`, then `py -3`, then `python`.
+- **`run_daemon.bat`** — Double-click to start in background (no console). Uses VBScript so the daemon stays running after the window closes. Tries `pythonw`, then `py -3`, then `python`.
 - **`run_daemon_visible.bat`** — Runs with a visible console (for debugging). Use this if the daemon fails to start.
 
 ## Run at Windows Startup
 
-To run the daemon automatically when Windows starts:
+**Option 1: Use `add_to_startup.bat`** (easiest)
+
+Double-click `add_to_startup.bat` once. It creates a shortcut in your Startup folder. The daemon will run automatically every time you log in to Windows.
+
+**Option 2: Manual**
 
 1. Press `Win+R`, type `shell:startup`, Enter
-2. Create a shortcut to `run_daemon.bat` (or to `pythonw.exe` with argument: `"C:\path\to\launcher-app-demon\main.py"`)
-3. Or use Task Scheduler to run `python main.py` at logon
+2. Create a shortcut to `run_daemon.bat` in that folder
+3. To remove: delete the shortcut from the Startup folder
 
 ## API
 
