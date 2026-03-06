@@ -8,7 +8,7 @@ if %errorlevel% neq 0 (
     where py >nul 2>&1
     if %errorlevel% neq 0 (
         echo Python not found. Install Python and add it to PATH.
-        echo Or run run_daemon_visible.bat to debug.
+        echo Run: python main.py (to test directly)
         pause
         exit /b 1
     )

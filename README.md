@@ -48,14 +48,13 @@ The file opens in its default application (e.g. Notepad for .txt, PDF reader for
 
 ## Running the Daemon
 
-- **`run_daemon.bat`** — Double-click to start in background (no console). Uses Python's `DETACHED_PROCESS` so the daemon **stays running** after the window closes. The daemon runs independently.
-- **`run_daemon_visible.bat`** — Runs with a visible console (for debugging). Use this if the daemon fails to start.
+- **`run_daemon.bat`** — Double-click to start in background (no console). Uses Python's `DETACHED_PROCESS` so the daemon **stays running** after the window closes.
 
 ## Run at Windows Startup (Always Running)
 
 **Option 1: Task Scheduler** (recommended, built into Windows)
 
-Double-click `install_task_scheduler.bat`. Creates a scheduled task that runs the daemon at every logon. No extra software needed.
+Double-click `install_task_scheduler.bat`. Creates a scheduled task that runs the daemon at every logon.
 
 To remove: `schtasks /delete /tn "Launcher Daemon" /f`
 
@@ -64,15 +63,6 @@ To remove: `schtasks /delete /tn "Launcher Daemon" /f`
 Double-click `add_to_startup.bat`. Creates a shortcut in your Startup folder. The daemon runs when you log in.
 
 To remove: Press `Win+R` → `shell:startup` → delete "Launcher Daemon" shortcut.
-
-**Option 3: Windows Service (NSSM)** (most robust)
-
-For a true Windows service that runs even before login and auto-restarts on failure:
-
-1. Download NSSM from https://nssm.cc/download
-2. Extract `nssm.exe` to this folder
-3. Run `install_nssm_service.bat`
-4. Start the service: `net start LauncherDaemon` or via `services.msc`
 
 ## API
 
