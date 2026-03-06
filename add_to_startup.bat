@@ -14,6 +14,7 @@ powershell -NoProfile -Command ^
     "$Shortcut = $WshShell.CreateShortcut('%SHORTCUT%'); " ^
     "$Shortcut.TargetPath = '%BAT_PATH%'; " ^
     "$Shortcut.WorkingDirectory = '%WORK_DIR%'; " ^
+    "$Shortcut.WindowStyle = 7; " ^
     "$Shortcut.Description = 'Launcher Daemon - opens files via localhost:8765'; " ^
     "$Shortcut.Save(); " ^
     "Write-Host 'Added to Startup. Launcher Daemon will run when you log in.'"
