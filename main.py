@@ -16,6 +16,12 @@ from urllib.parse import unquote, urlparse
 if sys.platform != "win32":
     sys.exit("This daemon is for Windows only.")
 
+# PyInstaller console=False: stdout/stderr can be None, breaking uvicorn logging
+if sys.stdout is None:
+    sys.stdout = open(os.devnull, "w")
+if sys.stderr is None:
+    sys.stderr = open(os.devnull, "w")
+
 from fastapi import FastAPI, Query
 from uvicorn import run
 
