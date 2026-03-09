@@ -3,15 +3,13 @@ name: Build Windows EXE
 on:
   push:
     branches: [main]
-  workflow_dispatch:  # Manual trigger from Actions tab
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-daemon:
     runs-on: windows-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -24,11 +22,57 @@ jobs:
           pip install -r requirements.txt
           pip install pyinstaller
 
-      - name: Build EXE with PyInstaller
+      - name: Build daemon EXE
         run: pyinstaller --clean launcher_daemon.spec
 
-      - name: Upload EXE artifact
+      - name: Validate daemon EXE
+        run: |
+          $exe = "dist\LauncherDaemon.exe"
+          Write-Host "Starting daemon..."
+          $proc = Start-Process -FilePath $exe -PassThru -WindowStyle Hidden
+          Start-Sleep -Seconds 15
+          try {
+            $r = Invoke-WebRequest -Uri "http://localhost:8765/health" -UseBasicParsing -TimeoutSec 5
+            $json = $r.Content | ConvertFrom-Json
+            if ($json.ok -eq $true) {
+              Write-Host "Validation PASSED: Daemon responded OK"
+            } else {
+              Write-Host "Validation FAILED: Unexpected response"
+              exit 1
+            }
+          } catch {
+            Write-Host "Validation FAILED: $_"
+            Get-Process -Id $proc.Id -ErrorAction SilentlyContinue | Stop-Process -Force
+            exit 1
+          } finally {
+            Get-Process -Id $proc.Id -ErrorAction SilentlyContinue | Stop-Process -Force
+          }
+
+      - name: Upload daemon EXE
         uses: actions/upload-artifact@v4
         with:
           name: LauncherDaemon-exe
           path: dist/LauncherDaemon.exe
+
+  build-installer:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare installer files
+        run: |
+          $stage = "C:\LauncherDaemonBuild"
+          New-Item -ItemType Directory -Path $stage -Force
+          Copy-Item main.py, requirements.txt, run_daemon.bat, launch_daemon.py, add_to_startup.bat, install_task_scheduler.bat $stage
+          New-Item -ItemType Directory -Path "$stage\installer" -Force
+          Copy-Item installer\install.bat "$stage\installer"
+
+      - name: Build installer (ZIP - always works)
+        run: |
+          Compress-Archive -Path "C:\LauncherDaemonBuild\*" -DestinationPath LauncherDaemon-Setup.zip -Force
+
+      - name: Upload installer ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: LauncherDaemon-Setup-zip
+          path: LauncherDaemon-Setup.zip

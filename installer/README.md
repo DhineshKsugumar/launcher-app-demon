@@ -2,15 +2,16 @@
 
 ## For users: Two ways to run
 
-### Option A: LauncherDaemon.exe (easiest – no Python needed)
+### Option A: LauncherDaemon-Setup.zip (recommended – full installer)
 
-Get **`LauncherDaemon.exe`** and double-click it. The daemon runs immediately. No installation.
+1. Download **`LauncherDaemon-Setup.zip`** from GitHub Actions
+2. Extract the zip
+3. Double-click **`installer\install.bat`**
+4. Follow prompts: installs Python if needed, pip deps, starts daemon, adds to startup
 
-### Option B: install.bat (if you have the full folder)
+### Option B: LauncherDaemon.exe (standalone – no Python needed)
 
-1. Extract the Launcher Daemon folder (from zip)
-2. Double-click **`installer\install.bat`**
-3. Follow prompts (installs Python if needed, then starts daemon)
+Get **`LauncherDaemon.exe`** and double-click it. The daemon runs immediately. Keep the console window open (minimize it).
 
 ---
 
