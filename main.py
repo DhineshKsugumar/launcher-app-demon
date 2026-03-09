@@ -132,8 +132,17 @@ def main():
     port = int(os.environ.get("LAUNCHER_PORT", DEFAULT_PORT))
     host = os.environ.get("LAUNCHER_HOST", "127.0.0.1")
     log(f"Launcher daemon starting on {host}:{port}")
-    # Use string "main:app" for PyInstaller compatibility
-    run("main:app", host=host, port=port, log_level="warning")
+    try:
+        print(f"Launcher Daemon running on http://localhost:{port}")
+        print("Minimize this window - the daemon keeps running.")
+        print("Close this window to stop the daemon.")
+        # Use string "main:app" for PyInstaller compatibility
+        run("main:app", host=host, port=port, log_level="warning")
+    except Exception as e:
+        log(f"Startup error: {e}")
+        import ctypes
+        ctypes.windll.user32.MessageBoxW(0, str(e), "Launcher Daemon Error", 0x10)
+        raise
 
 
 if __name__ == "__main__":
