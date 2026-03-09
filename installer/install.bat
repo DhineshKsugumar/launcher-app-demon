@@ -116,18 +116,15 @@ if %errorlevel% neq 0 (
 echo       Dependencies installed.
 echo.
 
-REM --- Step 3: Add to startup (Task Scheduler + Startup folder for reliability) ---
+REM --- Step 3: Add to startup (Startup folder - start_server.bat has delay for logon) ---
 echo [3/4] Adding to Windows startup...
-REM Get pythonw path (same dir as python.exe)
-for %%a in ("%PYTHON_EXE%") do set "PYTHONW=%%~dpapythonw.exe"
-set "LAUNCHER_SCRIPT=%APP_DIR%\launch_daemon.py"
-REM Task Scheduler: more reliable than Startup folder, uses full path at logon
-schtasks /create /tn "Launcher Daemon" /tr "\"%PYTHONW%\" \"%LAUNCHER_SCRIPT%\"" /sc onlogon /f
-REM Also add Startup shortcut (backup - runs run_daemon.bat which now finds Python)
+REM Remove old Task Scheduler task if present (we use Startup folder only now)
+schtasks /delete /tn "Launcher Daemon" /f >nul 2>&1
+REM Add Startup shortcut - start_server.bat waits 15s at logon then starts daemon
 set "STARTUP_FOLDER=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
 set "SHORTCUT=%STARTUP_FOLDER%\Launcher Daemon.lnk"
-powershell -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%SHORTCUT%'); $Shortcut.TargetPath = '%APP_DIR%\run_daemon.bat'; $Shortcut.WorkingDirectory = '%APP_DIR%'; $Shortcut.WindowStyle = 7; $Shortcut.Description = 'Launcher Daemon'; $Shortcut.Save();"
-echo       Added to startup (Task Scheduler + Startup folder).
+powershell -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%SHORTCUT%'); $Shortcut.TargetPath = '%APP_DIR%\start_server.bat'; $Shortcut.WorkingDirectory = '%APP_DIR%'; $Shortcut.WindowStyle = 7; $Shortcut.Description = 'Launcher Daemon - starts server at logon'; $Shortcut.Save();"
+echo       Added to startup (Launcher Daemon).
 echo.
 
 REM --- Step 4: Start the daemon ---
