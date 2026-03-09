@@ -136,8 +136,8 @@ def main():
         print(f"Launcher Daemon running on http://localhost:{port}")
         print("Minimize this window - the daemon keeps running.")
         print("Close this window to stop the daemon.")
-        # Use string "main:app" for PyInstaller compatibility
-        run("main:app", host=host, port=port, log_level="warning")
+        # Pass app directly - "main:app" fails in PyInstaller (no importable main module)
+        run(app, host=host, port=port, log_level="warning")
     except Exception as e:
         log(f"Startup error: {e}")
         import ctypes
