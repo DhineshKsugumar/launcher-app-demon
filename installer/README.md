@@ -11,7 +11,7 @@ For **non-technical users** – one-click setup that installs Python (if needed)
    - Choose whether to add to Windows startup (Y/N)
    - The daemon starts automatically
 
-## Option 2: Build a single .exe (for distribution)
+## Option 2: Build for distribution
 
 On a Windows machine, run:
 
@@ -19,9 +19,10 @@ On a Windows machine, run:
 installer\build_exe.bat
 ```
 
-This creates **`LauncherDaemon-Setup.exe`** in the project folder. Distribute this single file to users – they double-click it to install everything.
+This tries to create **`LauncherDaemon-Setup.exe`** (requires write access to `C:\`). If that fails, it creates **`LauncherDaemon-Setup.zip`** instead.
 
-If the .exe build fails, it will create **`LauncherDaemon-Setup.zip`** instead. Users extract the zip and run `installer\install.bat`.
+- **Exe**: Distribute the single file – users double-click to install.
+- **Zip**: Users extract the zip and run `installer\install.bat`.
 
 ## What the installer does
 
