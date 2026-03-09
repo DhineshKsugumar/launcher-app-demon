@@ -59,20 +59,36 @@ echo       Installing Python (silent - no clicks needed)...
 start /wait "" "%PYTHON_INSTALLER%" /passive InstallAllUsers=0 PrependPath=1 Include_test=0
 del "%PYTHON_INSTALLER%" 2>nul
 
-REM Refresh PATH - find newly installed Python
+REM Find newly installed Python - poll for up to 60 seconds (installer may spawn subprocesses)
+echo       Waiting for Python to be ready...
 set "PYTHON_EXE="
+set "RETRIES=0"
+:find_python_loop
+set /a RETRIES+=1
+if exist "%LOCALAPPDATA%\Programs\Python\Python312\python.exe" (
+    set "PYTHON_EXE=%LOCALAPPDATA%\Programs\Python\Python312\python.exe"
+    goto :python_found
+)
 for /d %%d in ("%LOCALAPPDATA%\Programs\Python\Python3*") do (
     if exist "%%d\python.exe" (
         set "PYTHON_EXE=%%d\python.exe"
         goto :python_found
     )
 )
-echo ERROR: Python was installed but could not be found. Please restart this installer.
+if %RETRIES% lss 12 (
+    timeout /t 5 /nobreak >nul
+    goto find_python_loop
+)
+echo ERROR: Python was installed but could not be found.
+echo Try running this installer again - Python may need a moment to finish.
 pause
 exit /b 1
 
 :python_found
 echo       Python found: %PYTHON_EXE%
+REM Add Python to PATH for this session (newly installed Python not in current PATH yet)
+for %%a in ("%PYTHON_EXE%") do set "PYTHON_DIR=%%~dpa"
+set "PATH=%PYTHON_DIR%;%PYTHON_DIR%Scripts;%PATH%"
 echo.
 
 REM --- Step 2: Install pip dependencies ---
