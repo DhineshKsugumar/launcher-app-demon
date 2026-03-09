@@ -6,21 +6,26 @@ Similar to the [windows-launcher-vr](https://github.com/...) mbvr:// protocol la
 
 ## Quick Start
 
-### 1. Install dependencies
+### For non-technical users
+
+Double-click **`installer\install.bat`**. It will:
+- Install Python if needed (you'll click Next in the Python installer)
+- Install dependencies
+- Start the daemon
+- Optionally add to Windows startup
+
+See `installer/README.md` for building a single `.exe` for distribution.
+
+### Manual setup
 
 ```bash
 pip install -r requirements.txt
-```
-
-### 2. Run the daemon
-
-```bash
 python main.py
 ```
 
 The server starts on `http://127.0.0.1:8765` by default.
 
-### 3. Launch a file
+### Launch a file
 
 Open in browser or call via HTTP:
 
