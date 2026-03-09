@@ -126,8 +126,11 @@ def main():
     port = int(os.environ.get("LAUNCHER_PORT", DEFAULT_PORT))
     host = os.environ.get("LAUNCHER_HOST", "127.0.0.1")
     log(f"Launcher daemon starting on {host}:{port}")
-    run(app, host=host, port=port, log_level="warning")
+    # Use string "main:app" for PyInstaller compatibility
+    run("main:app", host=host, port=port, log_level="warning")
 
 
 if __name__ == "__main__":
+    import multiprocessing
+    multiprocessing.freeze_support()  # Required for PyInstaller on Windows
     main()

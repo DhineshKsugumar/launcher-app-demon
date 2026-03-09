@@ -2,19 +2,25 @@
 
 A Python daemon that runs in the background on Windows and opens local files with their default application via `Start-Process`. Accepts HTTP requests with a file path in the URL query parameter.
 
-Similar to the [windows-launcher-vr](https://github.com/...) mbvr:// protocol launcher, but uses an HTTP endpoint instead of a custom URL protocol.
+**For users:** Double-click **`LauncherDaemon.exe`** – no Python needed. The daemon runs on http://localhost:8765.
 
 ## Quick Start
 
-### For non-technical users
+### For end users (Windows)
 
-Double-click **`installer\install.bat`**. It will:
-- Install Python if needed (you'll click Next in the Python installer)
-- Install dependencies
-- Start the daemon
-- Optionally add to Windows startup
+**Option 1:** Get `LauncherDaemon.exe` and double-click it. Done – no install needed.
 
-See `installer/README.md` for building a single `.exe` for distribution.
+**Option 2:** Run `installer\install.bat` (installs Python if needed, then starts daemon).
+
+### Building the EXE (for distribution)
+
+| Where | How |
+|-------|-----|
+| **Mac** | `./build_exe_docker.sh` (needs Docker) or use GitHub Actions |
+| **Windows** | `build_exe.bat` |
+| **GitHub** | Push to main → Actions → download artifact |
+
+See `installer/README.md` for details.
 
 ### Manual setup
 

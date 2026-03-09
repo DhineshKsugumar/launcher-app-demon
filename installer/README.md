@@ -1,28 +1,48 @@
 # Launcher Daemon Installer
 
-For **non-technical users** – one-click setup that installs Python (if needed), dependencies, and runs the daemon.
+## For users: Two ways to run
 
-## Option 1: Run install.bat (simplest)
+### Option A: LauncherDaemon.exe (easiest – no Python needed)
 
-1. Get the Launcher Daemon folder (zip or clone)
-2. Double-click **`install.bat`** (inside the `installer` folder)
-3. Follow the prompts:
-   - If Python is missing, the installer will download it – click **Next, Next** in the Python installer
-   - Choose whether to add to Windows startup (Y/N)
-   - The daemon starts automatically
+Get **`LauncherDaemon.exe`** and double-click it. The daemon runs immediately. No installation.
 
-## Option 2: Build for distribution
+### Option B: install.bat (if you have the full folder)
 
-On a Windows machine, run:
+1. Extract the Launcher Daemon folder (from zip)
+2. Double-click **`installer\install.bat`**
+3. Follow prompts (installs Python if needed, then starts daemon)
 
+---
+
+## For you: Building the EXE
+
+### On Mac (your machine)
+
+**Method 1: Docker** (requires Docker Desktop)
+```bash
+chmod +x build_exe_docker.sh
+./build_exe_docker.sh
 ```
+Output: `dist/LauncherDaemon.exe`
+
+**Method 2: GitHub Actions** (no local setup)
+1. Push your code to GitHub
+2. Go to Actions → "Build Windows EXE" → Run workflow (or it runs on push to main)
+3. Download the `LauncherDaemon-exe` artifact
+
+### On Windows
+
+```bash
+build_exe.bat
+```
+Output: `dist\LauncherDaemon.exe`
+
+### Building the ZIP (alternative distribution)
+
+```bash
 installer\build_exe.bat
 ```
-
-This tries to create **`LauncherDaemon-Setup.exe`** (requires write access to `C:\`). If that fails, it creates **`LauncherDaemon-Setup.zip`** instead.
-
-- **Exe**: Distribute the single file – users double-click to install.
-- **Zip**: Users extract the zip and run `installer\install.bat`.
+Creates `LauncherDaemon-Setup.zip` – users extract and run `installer\install.bat`
 
 ## What the installer does
 
