@@ -55,9 +55,8 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-echo       Running Python installer - please click Next, Next to complete...
-echo.
-start /wait "" "%PYTHON_INSTALLER%" InstallAllUsers=0 PrependPath=1 Include_test=0
+echo       Installing Python (silent - no clicks needed)...
+start /wait "" "%PYTHON_INSTALLER%" /passive InstallAllUsers=0 PrependPath=1 Include_test=0
 del "%PYTHON_INSTALLER%" 2>nul
 
 REM Refresh PATH - find newly installed Python
@@ -101,20 +100,14 @@ if %errorlevel% neq 0 (
 echo       Dependencies installed.
 echo.
 
-REM --- Step 3: Add to startup ---
-echo [3/4] Add to Windows startup?
-echo       The daemon will run automatically when you log in.
-choice /C YN /M "Add to startup"
-if %errorlevel% equ 1 (
-    set "BAT_PATH=%APP_DIR%\run_daemon.bat"
-    set "WORK_DIR=%APP_DIR%"
-    set "STARTUP_FOLDER=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
-    set "SHORTCUT=%STARTUP_FOLDER%\Launcher Daemon.lnk"
-    powershell -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%SHORTCUT%'); $Shortcut.TargetPath = '%BAT_PATH%'; $Shortcut.WorkingDirectory = '%WORK_DIR%'; $Shortcut.WindowStyle = 7; $Shortcut.Description = 'Launcher Daemon'; $Shortcut.Save();"
-    echo       Added to startup.
-) else (
-    echo       Skipped. Run add_to_startup.bat later if needed.
-)
+REM --- Step 3: Add to startup (always - no prompt) ---
+echo [3/4] Adding to Windows startup...
+set "BAT_PATH=%APP_DIR%\run_daemon.bat"
+set "WORK_DIR=%APP_DIR%"
+set "STARTUP_FOLDER=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
+set "SHORTCUT=%STARTUP_FOLDER%\Launcher Daemon.lnk"
+powershell -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%SHORTCUT%'); $Shortcut.TargetPath = '%BAT_PATH%'; $Shortcut.WorkingDirectory = '%WORK_DIR%'; $Shortcut.WindowStyle = 7; $Shortcut.Description = 'Launcher Daemon'; $Shortcut.Save();"
+echo       Added to startup.
 echo.
 
 REM --- Step 4: Start the daemon ---
@@ -126,10 +119,7 @@ echo ============================================
 echo   Setup complete!
 echo ============================================
 echo.
-echo The daemon is running on http://localhost:8765
-echo To launch a file: http://localhost:8765/launch?url=Z:/path/to/file.txt
+echo Daemon running on http://localhost:8765
+echo Will start automatically when you log in.
 echo.
-echo To run at startup: double-click add_to_startup.bat
-echo Or use: install_task_scheduler.bat
-echo.
-pause
+timeout /t 3 /nobreak >nul

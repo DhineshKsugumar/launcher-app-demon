@@ -14,6 +14,7 @@ powershell -NoProfile -Command ^
     "$temp = Join-Path $env:TEMP 'LauncherDaemonBuild'; " ^
     "if (Test-Path $temp) { Remove-Item $temp -Recurse -Force }; " ^
     "New-Item -ItemType Directory -Path (Join-Path $temp 'installer') -Force | Out-Null; " ^
+    "New-Item -ItemType Directory -Path (Join-Path $temp 'uninstall') -Force | Out-Null; " ^
     "Copy-Item (Join-Path $root 'main.py') $temp; " ^
     "Copy-Item (Join-Path $root 'requirements.txt') $temp; " ^
     "Copy-Item (Join-Path $root 'run_daemon.bat') $temp; " ^
@@ -21,6 +22,7 @@ powershell -NoProfile -Command ^
     "Copy-Item (Join-Path $root 'add_to_startup.bat') $temp; " ^
     "Copy-Item (Join-Path $root 'install_task_scheduler.bat') $temp; " ^
     "Copy-Item (Join-Path $root 'installer\install.bat') (Join-Path $temp 'installer'); " ^
+    "Copy-Item (Join-Path $root 'uninstall\uninstall.bat') (Join-Path $temp 'uninstall'); " ^
     "Compress-Archive -Path (Join-Path $temp '*') -DestinationPath $zip -Force; " ^
     "Remove-Item $temp -Recurse -Force -ErrorAction SilentlyContinue"
 

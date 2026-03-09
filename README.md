@@ -8,19 +8,13 @@ A Python daemon that runs in the background on Windows and opens local files wit
 
 ### For end users (Windows)
 
-**Option 1:** Get `LauncherDaemon.exe` and double-click it. Done – no install needed.
+1. Download **LauncherDaemon-Setup.zip** from [GitHub Actions](https://github.com/DhineshKsugumar/launcher-app-demon/actions)
+2. Extract and double-click **`installer\install.bat`**
+3. Done – installs Python if needed, dependencies, starts daemon, adds to startup. No prompts.
 
-**Option 2:** Run `installer\install.bat` (installs Python if needed, then starts daemon).
+### For testing (clean slate)
 
-### Building the EXE (for distribution)
-
-| Where | How |
-|-------|-----|
-| **Mac** | `./build_exe_docker.sh` (needs Docker) or use GitHub Actions |
-| **Windows** | `build_exe.bat` |
-| **GitHub** | Push to main → Actions → download artifact |
-
-See `installer/README.md` for details.
+Run **`uninstall\uninstall.bat`** to remove everything, then re-run the installer to test fresh install.
 
 ### Manual setup
 
