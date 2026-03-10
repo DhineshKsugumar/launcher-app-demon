@@ -7,16 +7,13 @@ set "INSTALLER_DIR=%~dp0"
 cd /d "%~dp0.."
 set "APP_DIR=%cd%"
 
-REM If running from temp (e.g. IExpress extraction), copy to permanent location
+REM Always copy to permanent location (stable path for startup, survives Downloads cleanup)
 set "INSTALL_DIR=%LOCALAPPDATA%\LauncherDaemon"
-echo %APP_DIR%| findstr /i "Temp IXP" >nul 2>&1
-if %errorlevel% equ 0 (
-    echo Copying to permanent location: %INSTALL_DIR%
-    if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
-    xcopy "%APP_DIR%\*" "%INSTALL_DIR%\" /E /Y /Q >nul 2>&1
-    set "APP_DIR=%INSTALL_DIR%"
-    cd /d "%APP_DIR%"
-)
+echo Copying to permanent location: %INSTALL_DIR%
+if not exist "%INSTALL_DIR%" mkdir "%INSTALL_DIR%"
+xcopy "%APP_DIR%\*" "%INSTALL_DIR%\" /E /Y /Q >nul 2>&1
+set "APP_DIR=%INSTALL_DIR%"
+cd /d "%APP_DIR%"
 
 echo.
 echo ============================================
@@ -116,15 +113,15 @@ if %errorlevel% neq 0 (
 echo       Dependencies installed.
 echo.
 
-REM --- Step 3: Add to startup (Startup folder - start_server.bat has delay for logon) ---
+REM --- Step 3: Add to startup (Registry Run - no admin needed, most reliable) ---
 echo [3/4] Adding to Windows startup...
-REM Remove old Task Scheduler task if present (we use Startup folder only now)
+REM Remove old methods
 schtasks /delete /tn "Launcher Daemon" /f >nul 2>&1
-REM Add Startup shortcut - start_server.bat waits 15s at logon then starts daemon
 set "STARTUP_FOLDER=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
-set "SHORTCUT=%STARTUP_FOLDER%\Launcher Daemon.lnk"
-powershell -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%SHORTCUT%'); $Shortcut.TargetPath = '%APP_DIR%\start_server.bat'; $Shortcut.WorkingDirectory = '%APP_DIR%'; $Shortcut.WindowStyle = 7; $Shortcut.Description = 'Launcher Daemon - starts server at logon'; $Shortcut.Save();"
-echo       Added to startup (Launcher Daemon).
+if exist "%STARTUP_FOLDER%\Launcher Daemon.lnk" del "%STARTUP_FOLDER%\Launcher Daemon.lnk"
+REM Registry Run key - runs at logon, no admin required, works for all users
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Launcher Daemon" /t REG_SZ /d "\"%APP_DIR%\start_server.bat\"" /f
+echo       Added to startup.
 echo.
 
 REM --- Step 4: Start the daemon ---

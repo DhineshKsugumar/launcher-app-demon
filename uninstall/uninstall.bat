@@ -16,14 +16,13 @@ echo.
 
 REM --- Step 2: Remove from startup ---
 echo [2/4] Removing from Windows startup...
+reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Launcher Daemon" /f 2>nul
 set "STARTUP_FOLDER=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
-set "SHORTCUT=%STARTUP_FOLDER%\Launcher Daemon.lnk"
-if exist "%SHORTCUT%" (
-    del "%SHORTCUT%"
+if exist "%STARTUP_FOLDER%\Launcher Daemon.lnk" (
+    del "%STARTUP_FOLDER%\Launcher Daemon.lnk"
     echo       Removed startup shortcut.
-) else (
-    echo       No startup shortcut found.
 )
+echo       Removed Registry Run entry.
 echo.
 
 REM --- Step 3: Remove Task Scheduler task if exists ---
