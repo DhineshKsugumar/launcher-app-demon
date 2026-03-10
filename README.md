@@ -2,7 +2,7 @@
 
 A Python daemon that runs in the background on Windows and opens local files with their default application via `Start-Process`. Accepts HTTP requests with a file path in the URL query parameter.
 
-**For users:** Double-click **`LauncherDaemon.exe`** – no Python needed. The daemon runs on http://localhost:8765.
+**For users:** Download the setup ZIP, extract, and run **`installer\install.bat`** – installs Python if needed, starts daemon, adds to startup.
 
 ## Quick Start
 
@@ -55,19 +55,11 @@ The file opens in its default application (e.g. Notepad for .txt, PDF reader for
 
 - **`run_daemon.bat`** — Double-click to start in background (no console). Uses Python's `DETACHED_PROCESS` so the daemon **stays running** after the window closes.
 
-## Run at Windows Startup (Always Running)
+## Run at Windows Startup
 
-**Option 1: Task Scheduler** (recommended, built into Windows)
+The installer adds the daemon to Task Scheduler so it starts automatically at logon. No extra steps needed.
 
-Double-click `install_task_scheduler.bat`. Creates a scheduled task that runs the daemon at every logon.
-
-To remove: `schtasks /delete /tn "Launcher Daemon" /f`
-
-**Option 2: Startup folder**
-
-Double-click `add_to_startup.bat`. Creates a shortcut in your Startup folder. The daemon runs when you log in.
-
-To remove: Press `Win+R` → `shell:startup` → delete "Launcher Daemon" shortcut.
+To remove: run `uninstall\uninstall.bat` or `schtasks /delete /tn "Launcher Daemon" /f`
 
 ## API
 
@@ -76,7 +68,8 @@ To remove: Press `Win+R` → `shell:startup` → delete "Launcher Daemon" shortc
 
 ## Logs
 
-Logs are written to: `%TEMP%\launcher_daemon.log`
+- **Daemon:** `%TEMP%\launcher_daemon.log` – startup, file opens, errors
+- **Startup:** `%TEMP%\launcher_daemon_startup.log` – Task Scheduler/VBS launcher (for debugging)
 
 ## Requirements
 

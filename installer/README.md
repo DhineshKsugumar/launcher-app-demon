@@ -25,5 +25,5 @@ To test a fresh install (no Python, no deps):
 
 1. **Checks for Python** – if not found, downloads Python 3.12 and runs the installer (user clicks Next)
 2. **Installs dependencies** – `pip install -r requirements.txt`
-3. **Asks about startup** – optionally adds the daemon to run at Windows logon
+3. **Adds to startup** – Task Scheduler runs the daemon at every logon
 4. **Starts the daemon** – runs in the background on http://localhost:8765

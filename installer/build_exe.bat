@@ -18,10 +18,7 @@ powershell -NoProfile -Command ^
     "Copy-Item (Join-Path $root 'main.py') $temp; " ^
     "Copy-Item (Join-Path $root 'requirements.txt') $temp; " ^
     "Copy-Item (Join-Path $root 'run_daemon.bat') $temp; " ^
-    "Copy-Item (Join-Path $root 'start_server.bat') $temp; " ^
     "Copy-Item (Join-Path $root 'launch_daemon.py') $temp; " ^
-    "Copy-Item (Join-Path $root 'add_to_startup.bat') $temp; " ^
-    "Copy-Item (Join-Path $root 'install_task_scheduler.bat') $temp; " ^
     "Copy-Item (Join-Path $root 'installer\install.bat') (Join-Path $temp 'installer'); " ^
     "Copy-Item (Join-Path $root 'uninstall\uninstall.bat') (Join-Path $temp 'uninstall'); " ^
     "Compress-Archive -Path (Join-Path $temp '*') -DestinationPath $zip -Force; " ^

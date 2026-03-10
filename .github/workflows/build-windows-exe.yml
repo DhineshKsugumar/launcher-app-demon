@@ -15,7 +15,7 @@ jobs:
         run: |
           $stage = "C:\LauncherDaemonBuild"
           New-Item -ItemType Directory -Path $stage -Force
-          Copy-Item main.py, requirements.txt, run_daemon.bat, launch_daemon.py, add_to_startup.bat, install_task_scheduler.bat $stage
+          Copy-Item main.py, requirements.txt, run_daemon.bat, launch_daemon.py $stage
           New-Item -ItemType Directory -Path "$stage\installer" -Force
           Copy-Item installer\install.bat "$stage\installer"
           New-Item -ItemType Directory -Path "$stage\uninstall" -Force
