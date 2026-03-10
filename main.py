@@ -131,7 +131,7 @@ def health():
 def main():
     port = int(os.environ.get("LAUNCHER_PORT", DEFAULT_PORT))
     host = os.environ.get("LAUNCHER_HOST", "127.0.0.1")
-    log(f"Launcher daemon starting on {host}:{port}")
+    log(f"Launcher daemon starting on {host}:{port} (pid={os.getpid()})")
     try:
         print(f"Launcher Daemon running on http://localhost:{port}")
         print("Minimize this window - the daemon keeps running.")

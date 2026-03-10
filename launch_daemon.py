@@ -13,6 +13,17 @@ if sys.platform != "win32":
     print("This launcher is for Windows only.")
     sys.exit(1)
 
+LOG_PATH = Path(os.environ.get("TEMP", os.environ.get("TMP", "."))) / "launcher_daemon_startup.log"
+
+
+def _log(msg: str) -> None:
+    try:
+        with open(LOG_PATH, "a", encoding="utf-8") as f:
+            f.write(f"{msg}\n")
+    except OSError:
+        pass
+
+
 # Script directory (where main.py lives)
 SCRIPT_DIR = Path(__file__).resolve().parent
 MAIN_PY = SCRIPT_DIR / "main.py"
@@ -22,6 +33,8 @@ python_exe = Path(sys.executable)
 pythonw = python_exe.parent / "pythonw.exe"
 if not pythonw.exists():
     pythonw = python_exe  # fallback to python (will show console briefly)
+
+_log(f"[launch_daemon] Started, pythonw={pythonw}, main_py={MAIN_PY}, cwd={SCRIPT_DIR}")
 
 # Windows-only: spawn process completely detached from parent
 # DETACHED_PROCESS = 0x00000008, CREATE_NEW_PROCESS_GROUP = 0x00000200
@@ -37,7 +50,9 @@ try:
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
     )
+    _log("[launch_daemon] Daemon spawned successfully")
     print("Launcher daemon started on http://localhost:8765")
 except OSError as e:
+    _log(f"[launch_daemon] Failed to spawn: {e}")
     print(f"Failed to start daemon: {e}")
     sys.exit(1)

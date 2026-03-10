@@ -7,7 +7,7 @@ echo ============================================
 echo.
 
 REM --- Step 1: Stop the daemon ---
-echo [1/4] Stopping Launcher Daemon...
+echo [1/3] Stopping Launcher Daemon...
 taskkill /F /IM pythonw.exe 2>nul
 taskkill /F /IM python.exe 2>nul
 timeout /t 2 /nobreak >nul
@@ -15,24 +15,18 @@ echo       Done.
 echo.
 
 REM --- Step 2: Remove from startup ---
-echo [2/4] Removing from Windows startup...
+echo [2/3] Removing from Windows startup...
+schtasks /delete /tn "Launcher Daemon" /f 2>nul
 reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Run" /v "Launcher Daemon" /f 2>nul
 set "STARTUP_FOLDER=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
-if exist "%STARTUP_FOLDER%\Launcher Daemon.lnk" (
-    del "%STARTUP_FOLDER%\Launcher Daemon.lnk"
-    echo       Removed startup shortcut.
-)
-echo       Removed Registry Run entry.
+if exist "%STARTUP_FOLDER%\Launcher Daemon.lnk" del "%STARTUP_FOLDER%\Launcher Daemon.lnk"
+set "INSTALL_DIR=%LOCALAPPDATA%\LauncherDaemon"
+if exist "%INSTALL_DIR%\launch_at_startup.vbs" del "%INSTALL_DIR%\launch_at_startup.vbs"
+echo       Removed startup entries.
 echo.
 
-REM --- Step 3: Remove Task Scheduler task if exists ---
-echo [3/4] Removing scheduled task...
-schtasks /delete /tn "Launcher Daemon" /f 2>nul
-echo       Done.
-echo.
-
-REM --- Step 4: Remove app folder ---
-echo [4/4] Removing Launcher Daemon files...
+REM --- Step 3: Remove app folder ---
+echo [3/3] Removing Launcher Daemon files...
 set "INSTALL_DIR=%LOCALAPPDATA%\LauncherDaemon"
 if exist "%INSTALL_DIR%" (
     rmdir /s /q "%INSTALL_DIR%"
